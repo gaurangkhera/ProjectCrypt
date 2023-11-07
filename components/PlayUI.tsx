@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 
 const PlayUI = ({ huntId }: { huntId: string }) => {
     const router = useRouter()
@@ -13,6 +14,7 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFinished, setIsFinished] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
 
     useEffect(() => {
@@ -42,15 +44,30 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
 
         if (data.correct) {
             setIsCorrect(true);
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
             setUserAnswer("");
+
+            if (currentQuestionIndex === questions.length - 1) {
+                setIsFinished(true); // set isFinished to true if it's the last question
+            } else {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+            }
         } else {
             setIsCorrect(false);
         }
+        
     }
 
     if (isLoading) {
         return <p>Loading...</p>;
+    }
+
+    if(isFinished){
+        return (
+            <div className="text-center  mt-56">
+                <h3 className="font-bold text-4xl">Congratulations!</h3>
+                <p>You just completed {hunt?.name}.</p>
+            </div>
+        )
     }
 
     if (!hunt) {
