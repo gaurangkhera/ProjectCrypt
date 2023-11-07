@@ -25,7 +25,11 @@ export default function Dashboard() {
   useEffect(() => {
     if (session) {
       const fetchHunts = async () => {
-        const res = await fetch(`/api/hunt/userHunts/${session.user.id}`);
+        const res = await fetch(`/api/hunt/userHunts/${session.user.id}`, {
+          headers: {
+            "x-dashboard-request": "true"
+          }
+        });
         setHunts(await res.json());
       };
       fetchHunts();

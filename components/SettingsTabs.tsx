@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import Skeleton from "react-loading-skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "./ui/textarea";
-import { Loader2 } from "lucide-react";
+import { Loader2, Share, Check } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import { Plus, Edit2 } from "lucide-react";
 import DeleteHuntButton from "./DeleteHuntButton";
@@ -30,6 +30,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
   const [huntDesc, setHuntDesc] = useState<string>("");
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [publicHunt, setPublic] = useState<boolean>(false);
+  const [copied, setCopied] = useState(false);
   const [changesMade, setChangesMade] = useState<boolean>(false);
   const [questions, setQuestions] = useState<Question[]>([{ id: "" ,text: "", answer: "" }]);
   const [saving, isSaving] = useState(false);
@@ -70,6 +71,16 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
       ]);
     }
   };
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+  
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
 
   const handleQuestionChange = (index: number, value: string) => {
     const newQuestions = [...questions];
@@ -195,6 +206,13 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
             </Button>
 
             <DeleteHuntButton huntId={huntId} huntName={huntName} />
+
+            <Button size={'sm'} onClick={() => {
+  navigator.clipboard.writeText(`${window.location.origin}/play/${huntId}`);
+  setCopied(true);
+}}>
+  {copied ? <Check /> : <Share />}
+</Button>
           </CardFooter>
         </Card>
       </TabsContent>
@@ -235,7 +253,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
             ) : (
               <p>No questions yet.</p>
             )}
-           <Button className="mt-4" onClick={() => addQuestion({ id: '', text: '', answer: '' })}>
+           <Button className="mt-8" onClick={() => addQuestion({ id: '', text: '', answer: '' })}>
   <Plus className="inline-block mr-2" /> Add question
 </Button>
           </CardContent>
