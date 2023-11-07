@@ -7,14 +7,24 @@ import { Input } from "./ui/input";
 import axios from "axios";
 import { Checkbox } from "./ui/checkbox";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const CreateButton = () => {
+    const router = useRouter();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [publicHunt, setPublic] = useState(false);
+    const [submitting, isSubmitting] = useState(false);
     const { data: session } = useSession();
 
     const handleSubmit = async () => {
+        if (title.trim() === '' || description.trim() === '') {
+            alert('Please fill out all fields.');
+            return;
+        }
+        isSubmitting(true);
 
         const huntData = {
             "title": title,
@@ -23,7 +33,10 @@ const CreateButton = () => {
             "creator": session?.user.id
         };
 
-        await axios.post('/api/hunt/new', huntData);
+        const res = await axios.post('/api/hunt/new', huntData);
+        const huntId = res.data.huntId;
+        router.push(`/dashboard/hunt/${huntId}`);
+       isSubmitting(false);
     }
 
     return (
@@ -39,7 +52,15 @@ const CreateButton = () => {
                 <div className="flex flex-row gap-1.5">
                 <Checkbox onCheckedChange={() => setPublic(prevPublic => !prevPublic)} className="mt-4" /> <span className="mt-3">Make this hunt public</span>
                 </div>
-                <Button onClick={() => handleSubmit()} className="mt-4">Proceed {' -> '}</Button>
+                <Button disabled={submitting} onClick={() => handleSubmit()} className="mt-4 gap-1.5">
+                { submitting ? 
+                        <>
+                        <Loader2 className="w-5 h-5 animate-spin" /> Creating
+                        </>
+                    : 
+                        <>Proceed {"->"}</>
+                    }
+                </Button>
             </DialogContent>
         </Dialog>
     )

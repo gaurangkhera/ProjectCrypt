@@ -16,6 +16,7 @@ import { Textarea } from "./ui/textarea";
 import { Loader2 } from "lucide-react";
 import { Checkbox } from "./ui/checkbox";
 import { Plus, Edit2 } from "lucide-react";
+import DeleteHuntButton from "./DeleteHuntButton";
 
 interface Question {
   id: string;
@@ -49,9 +50,15 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
   };
 
   const addQuestion = async (newQuestion: Question) => {
-    isSaving(true);
+    const lastQuestion = questions[questions.length - 1];
+
+    if (lastQuestion.text.trim() === '' || lastQuestion.answer.trim() === '') {
+      alert('Please fill out the previous question before adding a new one.');
+      return;
+    }
+
     const questionExists = questions.some(question => question.id === newQuestion.id);
-  
+
     if (questionExists) {
       const res: AxiosResponse = await axios.post(`/api/hunt/${huntId}/questions/update`, {
         question: newQuestion
@@ -59,11 +66,9 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
     } else {
       setQuestions((prevQuestions) => [
         ...prevQuestions,
-        newQuestion,
+        { id: '', text: '', answer: '' },
       ]);
     }
-
-    isSaving(false);
   };
 
   const handleQuestionChange = (index: number, value: string) => {
@@ -86,9 +91,12 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
   }
 
   const saveQuestions = async () => {
+    isSaving(true);
     for (const question of questions) {
       await addQuestion(question);
     }
+
+    isSaving(false);
   };
 
   useEffect(() => {
@@ -174,7 +182,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
               <span className="mt-3">Make this hunt public</span>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="gap-2.5">
             <Button disabled={!changesMade || submitting} onClick={saveChanges}>
               {submitting ? (
                 <>
@@ -185,6 +193,8 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
                 "Save changes"
               )}
             </Button>
+
+            <DeleteHuntButton huntId={huntId} huntName={huntName} />
           </CardFooter>
         </Card>
       </TabsContent>

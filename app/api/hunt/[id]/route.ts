@@ -16,8 +16,6 @@ export const PUT = async (req: NextRequest, { params }: { params: any }) => {
             }
         })
 
-        console.log(hunt)
-
         return new Response(JSON.stringify(hunt), { status: 200})
         
     }catch(e){

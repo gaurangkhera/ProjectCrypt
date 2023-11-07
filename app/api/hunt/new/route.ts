@@ -13,12 +13,11 @@ export const POST = async (req: NextRequest) => {
                 creatorId: data.creator as string,
             }
         })
-    
-        console.log(newHunt)
+
+        const huntId = newHunt.id
         
-        return new Response(JSON.stringify({ success: true }))
+        return new Response(JSON.stringify({huntId}))
     }catch(e){
-        console.log(e)
         return new Response(JSON.stringify({ success: false, error: e}))
     }
 

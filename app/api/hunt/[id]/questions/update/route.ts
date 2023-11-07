@@ -35,7 +35,6 @@ export const POST = async (req: NextRequest, { params }: { params: any }) => {
 
         return new Response('Question updated successfully', { status: 200 });
     } catch (error) {
-        console.log(error)
         return new Response('An error occurred while updating the question', { status: 569 });
     }
 }
