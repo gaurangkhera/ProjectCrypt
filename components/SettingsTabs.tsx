@@ -115,7 +115,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
     };
 
     fetchHunt();
-  }, []);
+  });
 
   const saveChanges = async () => {
     setSubmitting(true);
@@ -145,7 +145,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
           <CardHeader>
             <CardTitle>Details</CardTitle>
             <CardDescription>
-              Adjust your hunt's details here. Save changes when done.
+              Adjust your hunt&apos;s details here. Save changes when done.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">

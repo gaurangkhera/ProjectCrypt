@@ -69,7 +69,7 @@ const Navbar = () => {
 			  }
 			};
 			fetchProviders();
-		  }, []);
+		  });
 
 	if(!session && !providers) {
 		return (
