@@ -2,10 +2,8 @@
 
 import { useParams } from "next/navigation";
 import PlayUI from "@/components/PlayUI";
-import axios from "axios";
-import { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
     const params = useParams();
     const huntId = params.id;
 
@@ -14,4 +12,4 @@ const page = () => {
     )
 }
 
-export default page;
+export default Page;
