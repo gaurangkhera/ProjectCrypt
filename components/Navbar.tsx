@@ -60,18 +60,20 @@ const UserAccountNav = ({ imageUrl, email, name }: { imageUrl: string, email: st
 const Navbar = () => {
 	const { data: session } = useSession();
 	const [providers, setProviders] = useState<Record<string, Provider> | null>(null);
-  
-	useEffect(() => {
-	  const fetchProviders = async () => {
-		const res = await getProviders();
-		setProviders(res);
-	  };
-	  fetchProviders();
-	}, []);
 
-	if(!session){
+		useEffect(() => {
+			const fetchProviders = async () => {
+			  const res = await getProviders();
+			  if(!session){
+				setProviders(res);
+			  }
+			};
+			fetchProviders();
+		  }, []);
+
+	if(!session && !providers) {
 		return (
-			<Skeleton  />
+			<Skeleton />
 		)
 	}
   
