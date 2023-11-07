@@ -115,7 +115,7 @@ export function SettingsTabs({ huntId }: { huntId: string }) {
     };
 
     fetchHunt();
-  });
+  }, []);
 
   const saveChanges = async () => {
     setSubmitting(true);
