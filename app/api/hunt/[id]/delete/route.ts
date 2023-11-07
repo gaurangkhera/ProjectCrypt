@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { json } from "stream/consumers";
 
 export const DELETE = async(req: NextRequest, { params }: { params: any }) => {
     try{
