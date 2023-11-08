@@ -98,8 +98,8 @@ const Navbar = () => {
 			</Link>
 	
 			<div className="hidden items-center space-x-4 sm:flex">
-			  <Link href="/hunt/new" className={buttonVariants({ variant: "ghost" })}>
-				Host
+			  <Link href="/about" className={buttonVariants({ variant: "ghost" })}>
+				About
 			  </Link>
 			  {status === "loading" ? (
 				<UserAccountNavSkeleton />
