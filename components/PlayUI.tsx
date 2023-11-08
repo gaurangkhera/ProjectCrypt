@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Loader2 } from "lucide-react";
 
 const PlayUI = ({ huntId }: { huntId: string }) => {
     const router = useRouter()
@@ -17,6 +18,7 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isFinished, setIsFinished] = useState(false);
+    const [isCheckingAnswer, setIsCheckingAnswer] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
 
     useEffect(() => {
@@ -37,6 +39,7 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
     }, [huntId])
 
     const checkAnswer = async () => {
+        setIsCheckingAnswer(true);
         setHasSubmitted(true);
         const questionId = questions[currentQuestionIndex].id;
         const res = await axios.post(`/api/hunt/${huntId}/questions/${questionId}/check-answer`, {
@@ -56,7 +59,7 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
         } else {
             setIsCorrect(false);
         }
-        
+        setIsCheckingAnswer(false);
     }
 
 
@@ -85,8 +88,10 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
                     className="w-full mb-4 p-2"
                     placeholder="Enter your answer here"
                 />
-                <Button onClick={checkAnswer} className="w-full">Submit Answer</Button>
-                {isCorrect === false && hasSubmitted && <p className="mt-4 text-red-500">Incorrect answer. Please try again.</p>}
+                <Button onClick={checkAnswer} disabled={isCheckingAnswer} className="w-full">
+                {isCheckingAnswer ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit Answer"}
+            </Button>
+            {isCorrect === false && hasSubmitted && !isCheckingAnswer && <p className="mt-4 text-red-500">Incorrect answer. Please try again.</p>}
             </div>
         </div>
     )
