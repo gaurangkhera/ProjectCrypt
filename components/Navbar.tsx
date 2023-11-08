@@ -110,6 +110,7 @@ const Navbar = () => {
 				  name={session.user.name || ""}
 				/>
 			  ) : (
+				//@ts-ignore
 				status === "loading" ? (
 				  <GetStartedSkeleton />
 				) : (
