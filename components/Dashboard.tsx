@@ -10,6 +10,8 @@ import CreateButton from "./HostButton";
 import { Plus } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 
 type Hunt = {
   id: string;
@@ -21,9 +23,11 @@ type Hunt = {
 export default function Dashboard() {
   const { data: session } = useSession();
   const [hunts, setHunts] = useState<Hunt[]>([]);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     if (session) {
+      setLoading(true);
       const fetchHunts = async () => {
         const res = await fetch(`/api/hunt/userHunts/${session.user.id}`, {
           headers: {
@@ -31,10 +35,29 @@ export default function Dashboard() {
           }
         });
         setHunts(await res.json());
+        setLoading(false);
       };
       fetchHunts();
     }
-  }, [session, hunts]);
+  }, []);
+
+  function SettingsTabsSkeleton() {
+    return (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, index) => (
+          <div key={index} className="p-4 bg-black rounded-lg">
+            <Skeleton height={50} baseColor="#27282C" highlightColor="#404349" />
+            <Skeleton height={20} baseColor="#27282C" highlightColor="#404349" />
+            <Skeleton height={20} baseColor="#27282C" highlightColor="#404349" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if(isLoading){
+    return <SettingsTabsSkeleton />
+  }
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">

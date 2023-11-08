@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const PlayUI = ({ huntId }: { huntId: string }) => {
     const router = useRouter()
@@ -57,15 +59,12 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
         
     }
 
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
 
     if(isFinished){
         return (
             <div className="text-center  mt-56">
                 <h3 className="font-bold text-4xl">Congratulations!</h3>
-                <p>You just completed {hunt?.name}.</p>
+                <p>You just completed {hunt?.name || <Skeleton />}.</p>
             </div>
         )
     }
@@ -76,7 +75,7 @@ const PlayUI = ({ huntId }: { huntId: string }) => {
 
     return (
         <div className="flex flex-col items-center justify-center mt-56">
-            <h1 className="text-2xl font-bold mb-4">{hunt.name}</h1>
+            <h1 className="text-2xl font-bold mb-4">{hunt.name || <Skeleton />}</h1>
             <div className="w-full max-w-md">
                 <p className="text-lg font-bold mb-4">{questions[currentQuestionIndex].question}</p>
                 <Input 
